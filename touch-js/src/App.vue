@@ -1,65 +1,82 @@
 <template>
   <div id="app">
     <div class="imgWrap">
-      <div class="it" :style="move"></div>
-      <div class="it"></div>
+      <div class="it" v-for="(item, index) in data" :style="index == 0 ? move : ''">{{item}}</div>
     </div>
-    
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
 import Touch from "./utils/touch";
 
 export default {
   name: "app",
   data() {
     return {
-      move: ""
+      move: "",
+      data: [1,2]
     };
-  },
-  components: {
-    HelloWorld
   },
   mounted() {
     this.bindTouch();
   },
   methods: {
     bindTouch() {
+      let _this = this;
       let i = document.querySelectorAll(".it")[0];
-      console.log(i)
       Touch.bindEvent(i, "swipeleft", this.tLeft);
       Touch.bindEvent(i, "swiperight", this.tRight);
-      Touch.bindEvent(i, "def", this.resetPosition);
+      Touch.bindEvent(i, "slideup", this.resetPosition);
+      Touch.bindEvent(i, "slidedown", this.resetPosition);
       Touch.bindEvent(i, "move", this.tMove);
-      this.$on("hook:destroyed", () => {
+      
+      _this.$on("hook:destroyed", () => {
         Touch.removeEvent(i, "swipeleft", this.tLeft);
         Touch.removeEvent(i, "swiperight", this.tRight);
       });
     },
     tLeft(e, delta) {
-      console.log("left");
+      var _this = this;
+      if(delta.x > 130){
+        _this.resetPosition2(function(){
+          _this.data.shift();
+          _this.data.push(_this.data[_this.data.length - 1] + 1)
+        });
+      } else {
+        _this.resetPosition();
+      }
+      
     },
     tRight() {
       console.log("right");
+      this.resetPosition();
     },
     tMove(e, m) {
-      this.move = "transform: translate3d(" + -m.x + "px," + 0 + "px,0);transition: all 0.1s;";
+      this.move = "transition-duration: 0s;transform: translate3d(" + -m.x + "px," + 0 + "px,0px);";
     },
     resetPosition() {
-      this.move = "transform: translate3d(0,0,0);transition: all 0.1s;";
+      this.move = "transition-duration: .3s;transform: translate3d(0px,0px,0px);";
+      setTimeout(() => {
+        this.move = "transition-duration: 0s;transform: translate3d(0px,0px,0px);";
+      }, 320);
+    },
+    resetPosition2(fn) {
+      this.move = "transition-duration: .35s; transform: translate3d(-150%,0px,0px);";
+      setTimeout(() => {
+        this.move = "transition-duration: 0s;transform: translate3d(0px,0px,0px);";
+        fn && fn();
+      }, 320);
     }
   }
 };
 </script>
 
 <style>
-*{
+* {
   margin: 0;
   padding: 0;
 }
-body{
+body {
   overflow: hidden;
 }
 #app {
@@ -76,15 +93,16 @@ body{
   width: 100%;
   height: 300px;
 }
-.imgWrap .it{
+.imgWrap .it {
   position: relative;
   margin: 0 auto;
   width: 300px;
   height: 300px;
   background: red;
   z-index: 100;
+  transition-property: transform, -webkit-transform;
 }
-.imgWrap .it:nth-child(2){
+.imgWrap .it:nth-child(2) {
   position: absolute;
   left: 0;
   right: 0;
@@ -92,6 +110,6 @@ body{
   bottom: 0;
   margin: 0 auto;
   z-index: 50;
-  background: green;
+  background: #d10909;
 }
 </style>
