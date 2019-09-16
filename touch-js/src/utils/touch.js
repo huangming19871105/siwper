@@ -9,7 +9,7 @@
 const EventUtil = (function () {
 
   //支持事件列表
-  let eventArr = ['eventswipeleft', 'eventswiperight', 'eventslideup', 'eventslidedown', 'eventclick', 'eventlongpress', 'eventmove'];
+  let eventArr = ['eventdef','eventswipeleft', 'eventswiperight', 'eventslideup', 'eventslidedown', 'eventclick', 'eventlongpress', 'eventmove'];
 
   //touchstart事件，delta记录开始触摸位置
   function touchStart(event) {
@@ -27,6 +27,7 @@ const EventUtil = (function () {
    * 这样就模拟的移动端几个常见的时间。
    * */
   function touchEnd(event) {
+    event.preventDefault();
     let delta = this.delta;
     delete this.delta;
     let timegap = new Date().getTime() - delta.time;
@@ -45,6 +46,11 @@ const EventUtil = (function () {
             fn(event);
           });
         }
+      }
+      if (this['eventdef']) {
+        this['eventdef'].map(function (fn) {
+          fn(event, delta);
+        });
       }
       return;
     }
@@ -73,10 +79,16 @@ const EventUtil = (function () {
         });
       }
     }
+    if (this['eventdef']) {
+      this['eventdef'].map(function (fn) {
+        fn(event, delta);
+      });
+    }
   }
 
   function touchMove(event) {
-    let m = {}
+    let m = {};
+    event.preventDefault();
     m.x = this.delta.x - event.changedTouches[0].pageX;
     m.y = this.delta.y -event.changedTouches[0].pageY;
     if(this['eventmove']) {

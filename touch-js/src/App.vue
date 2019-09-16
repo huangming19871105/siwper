@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div class="imgWrap">
-      <img alt="Vue logo" src="./assets/logo.png" :style="move" />
-      <img alt="Vue logo" src="./assets/logo.png"/>
+      <div class="it" :style="move"></div>
+      <div class="it"></div>
     </div>
     
   </div>
@@ -27,12 +27,11 @@ export default {
   },
   methods: {
     bindTouch() {
-      let i = document.querySelectorAll("img")[0];
+      let i = document.querySelectorAll(".it")[0];
       console.log(i)
       Touch.bindEvent(i, "swipeleft", this.tLeft);
       Touch.bindEvent(i, "swiperight", this.tRight);
-      Touch.bindEvent(i, "slidedown", this.tDown);
-      Touch.bindEvent(i, "slideup", this.tUp);
+      Touch.bindEvent(i, "def", this.resetPosition);
       Touch.bindEvent(i, "move", this.tMove);
       this.$on("hook:destroyed", () => {
         Touch.removeEvent(i, "swipeleft", this.tLeft);
@@ -41,29 +40,28 @@ export default {
     },
     tLeft(e, delta) {
       console.log("left");
-      this.resetPosition();
     },
     tRight() {
       console.log("right");
-      this.resetPosition();
-    },
-    tDown() {
-      this.resetPosition();
-    },
-    tUp() {
-      this.resetPosition();
     },
     tMove(e, m) {
-      this.move = "transform: translate3d(" + -m.x + "px," + 0 + "px,0)";
+      this.move = "transform: translate3d(" + -m.x + "px," + 0 + "px,0);transition: all 0.1s;";
     },
     resetPosition() {
-      this.move = "transform: translate3d(0,0,0)";
+      this.move = "transform: translate3d(0,0,0);transition: all 0.1s;";
     }
   }
 };
 </script>
 
 <style>
+*{
+  margin: 0;
+  padding: 0;
+}
+body{
+  overflow: hidden;
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -73,20 +71,20 @@ export default {
   margin-top: 60px;
 }
 
-img {
-  transition: all 0.1s;
-}
-
 .imgWrap {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 300px;
 }
-.imgWrap img{
+.imgWrap .it{
   position: relative;
+  margin: 0 auto;
+  width: 300px;
+  height: 300px;
+  background: red;
   z-index: 100;
 }
-.imgWrap img:nth-child(2){
+.imgWrap .it:nth-child(2){
   position: absolute;
   left: 0;
   right: 0;
@@ -94,5 +92,6 @@ img {
   bottom: 0;
   margin: 0 auto;
   z-index: 50;
+  background: green;
 }
 </style>
