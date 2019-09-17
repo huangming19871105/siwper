@@ -8,9 +8,12 @@
       :markDate="arr2"
       :sundayStart="true"
       v-on:isToday="clickToday"
-      agoDayHide="1530115221"
+      agoDayHide="1566921600"
+      futureDayHide="1569600000"
+      loadingText="加载中..."
       v-on:choseDay="clickDay"
       v-on:changeMonth="changeDate"
+      :showLoading.sync="show"
     ></Calendar>
     <br>
     <h3 @click="demo">markDateMore标记不同风格：：1号2号一种风格====13号另一种风格</h3>
@@ -27,6 +30,7 @@ export default {
   data() {
     return {
       // arr2: ['2018/6/23'],
+      show: false,
       startStatus: false,
       arr2: [],
       arr: [
@@ -53,6 +57,10 @@ export default {
       console.log("跳到了本月今天", data); //跳到了本月
     },
     changeDate(data) {
+      this.show = true;
+      setTimeout(() => {
+        this.show = false;
+      }, 1200);
       this.$toast("切换到的月份为" + data);
       console.log("左右点击切换月份", data); //左右点击切换月份
     },
