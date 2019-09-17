@@ -8,7 +8,7 @@
       :markDate="arr2"
       :sundayStart="true"
       v-on:isToday="clickToday"
-      agoDayHide="1566921600"
+      agoDayHide="1561651200"
       futureDayHide="1569600000"
       loadingText="加载中..."
       v-on:choseDay="clickDay"
@@ -29,7 +29,7 @@ import Calendar from '../vue-calendar-component/index';
 export default {
   data() {
     return {
-      // arr2: ['2018/6/23'],
+      // arr2: ['2018/8/23'],
       show: false,
       startStatus: false,
       arr2: [],
@@ -50,17 +50,17 @@ export default {
   },
   methods: {
     clickDay(data) {
-      console.log("选中了", data); //选中某天
+      // console.log("选中了", data); //选中某天
       this.$toast("选中了" + data);
     },
     clickToday(data) {
-      console.log("跳到了本月今天", data); //跳到了本月
+      // console.log("跳到了本月今天", data); //跳到了本月
     },
     changeDate(data) {
-      this.show = true;
-      setTimeout(() => {
-        this.show = false;
-      }, 1200);
+      // this.show = true;
+      // setTimeout(() => {
+      //   this.show = false;
+      // }, 1200);
       this.$toast("切换到的月份为" + data);
       console.log("左右点击切换月份", data); //左右点击切换月份
     },

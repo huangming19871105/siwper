@@ -276,11 +276,16 @@ export default {
       return obj;
     },
     clickDay: function(item, index) {
-      this.myDate = new Date(item.date)
+      this.myDate = new Date(item.date);
       if (item.otherMonth === "nowMonth" && !item.dayHide) {
         this.getList(this.myDate, item.date);
       }
       if (item.otherMonth !== "nowMonth") {
+        if(item.otherMonth === "preMonth") {
+          this.myDate = timeUtil.getOtherMonth(this.myDate, "nextMonth");   
+        } else {
+          this.myDate = timeUtil.getOtherMonth(this.myDate, "preMonth");   
+        }
         item.otherMonth === "preMonth"
           ? this.PreMonth(item.date)
           : this.NextMonth(item.date);
@@ -337,6 +342,7 @@ export default {
       let monthStr = date.getMonth() + 1;
       this.dateTop = `${date.getFullYear()}年${monthStr > 9 ? monthStr : ('0' + monthStr)}月`;
       let arr = timeUtil.getMonthList(this.myDate);
+      let today = timeUtil.dateFormat(new Date());
 
       for (let i = 0; i < arr.length; i++) {
         let markClassName = "";
